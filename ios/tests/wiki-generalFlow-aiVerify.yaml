@@ -1,0 +1,16 @@
+# wiki-generalFlow-aiVerify.yaml
+# Navigates to the Wikipedia Explore home screen and uses assertWithAI to verify
+# the feed looks correct.
+
+appId: org.wikimedia.wikipedia
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+# assertWithAI: validate the Explore home screen looks correct
+- assertWithAI:
+    assertion: "The screen shows the Wikipedia Explore feed with at least one article card containing a title and description. A search bar is visible at the top."
+    optional: false
+
+- takeScreenshot: iOS_Wiki_HomeScreen

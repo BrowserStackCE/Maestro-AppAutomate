@@ -1,0 +1,15 @@
+# wiki-scroll-assertNoDefects.yaml
+
+appId: org.wikipedia.alpha
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+- runFlow: common/functions/scroll.yaml
+
+# assertNoDefectsWithAI: audit the Explore home screen for UI defects like text or UI elements cut off, overlapping, or misalignment.
+- assertNoDefectsWithAI:
+    optional: false #Determines if the Flow should continue if the assertion fails.
+
+- takeScreenshot: WikiScroll_TopReadVisible

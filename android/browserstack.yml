@@ -1,0 +1,99 @@
+# browserstack.yml
+# BrowserStack App Automate — Maestro Android run profile
+#
+# Usage:
+#   Set credentials as environment variables (never hard-code them):
+#     export BROWSERSTACK_USERNAME="your-username"
+#     export BROWSERSTACK_ACCESS_KEY="your-access-key"
+#
+#   Then trigger a build via Test Companion (run_maestro_build) or the
+#   BrowserStack CLI — this file is read automatically.
+#
+# References the uploaded app and test-suite by their custom_id values
+# (set during upload via run-android.sh --upload).
+
+# ── Credentials ────────────────────────────────────────────────────────────────
+userName: ${BROWSERSTACK_USERNAME}
+accessKey: ${BROWSERSTACK_ACCESS_KEY}
+
+# ── App under test ─────────────────────────────────────────────────────────────
+# Use the custom_id assigned at upload time so you never need to hard-code a
+# bs:// hash.  Swap for a bs:// URL if you prefer to pin a specific upload.
+# custom_id assigned at upload time (via run-android.sh --upload)
+app: WikipediaSample
+
+# ── Test suite ─────────────────────────────────────────────────────────────────
+# custom_id assigned at upload time (via run-android.sh --upload)
+testSuite: AndroidFlows
+
+# ── Project / build metadata ───────────────────────────────────────────────────
+project: Maestro
+# buildName is optional; uncomment and set to tag this run
+# buildName: "Android smoke — ${BUILD_NUMBER}"
+
+# ── Target devices ─────────────────────────────────────────────────────────────
+# Format: "<Device Name>-<osVersion>"
+devices:
+  - Samsung Galaxy S25-15.0
+  - Samsung Galaxy S26-16.0
+  - Google Pixel 10-16.0
+  - Google Pixel 11-17.0
+
+# ── Maestro runtime ────────────────────────────────────────────────────────────
+# 1.39.13 is the supported version for accessibility scanning.
+maestroVersion: 1.39.13
+
+# ── Observability & debugging ──────────────────────────────────────────────────
+# testObservability MUST be true Only when accessibility is enabled/ else keep false
+testObservability: true
+networkLogs: true
+deviceLogs: true
+appProfiling: true
+
+# Retry failed tests once before marking them as failed.
+retryTestsOnFailure: true
+
+# ── Accessibility scanning ─────────────────────────────────────────────────────
+accessibility: true
+accessibilityOptions:
+  wcagVersion: wcag22aa
+  includeIssueType:
+    bestPractice: true
+    needsReview: false
+  screenReaderAutomationReport: true
+
+# ── Sharding ───────────────────────────────────────────────────────────────────
+# PARALLEL SESSION CALCULATION:
+#   deviceSelection: all  → each shard runs on EVERY listed device
+#                           total sessions = numberOfShards × number of devices
+#                           e.g. 5 shards × 4 devices = 20 parallel sessions
+#   deviceSelection: any  → BrowserStack picks ONE available device per shard
+#                           total sessions = numberOfShards (1 per shard)
+#
+# Ensure your account's parallel limit >= total sessions or builds will be
+# queued / rejected with BROWSERSTACK_ALL_PARALLELS_IN_USE.
+
+shards:
+  numberOfShards: 5
+  deviceSelection: any
+  mapping:
+    - name: "Shard 1 - scroll AI assert"
+      values:
+        execute:
+          - wiki-scroll-aiAssert.yaml
+    - name: "Shard 2 - swipe onboarding"
+      values:
+        execute:
+          - wiki-swipe.yaml
+    - name: "Shard 3 - AI extract"
+      values:
+        execute:
+          - wiki-aiExtract.yaml
+    - name: "Shard 4 - conditional nested flows"
+      values:
+        execute:
+          - wiki-conditional-nestedFlows.yaml
+    - name: "Shard 5 - general flow AI verify"
+      values:
+        execute:
+          - wiki-generalFlow-aiVerify.yaml

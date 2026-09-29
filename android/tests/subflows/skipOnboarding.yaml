@@ -1,0 +1,38 @@
+# skipOnboarding.yaml
+# Reusable sub-flow: dismisses the notification permission dialog (if shown)
+# and skips the onboarding pager to land on the Explore home screen.
+# Use after launchApp with clearState: true.
+
+appId: org.wikipedia.alpha
+--- # To be used within other flows, not separately.
+
+# Wait for the app to fully settle after launch before checking for dialogs
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# Dismiss notification permission dialog if it appears before onboarding (tap Allow to proceed)
+- runFlow:
+    when:
+      visible: "Allow"
+    commands:
+      - tapOn: "Allow"
+      - waitForAnimationToEnd:
+          timeout: 2000
+
+# Skip the onboarding pager if it appears
+- runFlow:
+    when:
+      visible: "SKIP"
+    commands:
+      - tapOn: "SKIP"
+      - waitForAnimationToEnd:
+          timeout: 2000
+
+# Dismiss notification permission dialog if it appears after onboarding skip
+- runFlow:
+    when:
+      visible: "Allow"
+    commands:
+      - tapOn: "Allow"
+      - waitForAnimationToEnd:
+          timeout: 2000

@@ -1,0 +1,28 @@
+# wiki-swipe.yaml
+# Swipes through the Wikipedia onboarding pager (if shown) and then
+# uses assertNoDefectsWithAI to audit the Explore home screen.
+
+appId: org.wikimedia.wikipedia
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+# Swipe left across the Explore feed to reveal more content.
+# X: 350→50 (safe for all iPhone 15+ widths), Y: 400px (mid-screen).
+- repeat:
+    times: 3
+    commands:
+      - swipe:
+          start: 350, 400
+          end: 50, 400
+          duration: 800
+      - waitForAnimationToEnd:
+          timeout: 500
+
+# assertNoDefectsWithAI: audit the screen after swiping for UI defects
+# such as truncated text, broken layouts, or misaligned elements.
+- assertNoDefectsWithAI:
+    optional: false
+
+- takeScreenshot: iOS_Wiki_SwipeAudit

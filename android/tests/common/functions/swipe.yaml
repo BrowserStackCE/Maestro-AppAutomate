@@ -1,0 +1,15 @@
+# swipeFlow.yaml
+# Reusable sub-flow: 3× horizontal left-swipe through the onboarding pager.
+# Coordinates preserved from wiki-swipe.yaml.
+
+appId: org.wikipedia.alpha
+--- # To be used within other flows via runFlow, not run standalone.
+- repeat:
+    times: 3
+    commands:
+      - swipe:
+          start: 800, 1000
+          end: 200, 1000
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 1000

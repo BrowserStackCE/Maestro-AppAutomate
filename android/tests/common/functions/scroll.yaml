@@ -1,0 +1,5 @@
+appId: org.wikipedia.alpha
+--- # scrollFlow.yaml — reusable sub-flow: scrolls down twice. To be used within other flows, not separately.
+
+- scroll
+- scroll

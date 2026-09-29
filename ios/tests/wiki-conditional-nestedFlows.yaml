@@ -1,0 +1,26 @@
+# wiki-conditional-nestedFlows.yaml
+# Scrolls to the Top read section conditionally — runs a scroll
+# if the section is not yet visible after landing on the home screen.
+
+appId: org.wikimedia.wikipedia
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+# Dismiss any announcement card if present
+- runFlow:
+    when:
+      visible: "Got it"
+    commands:
+      - tapOn: "Got it"
+
+# Conditionally scroll down if Top read section is not yet visible
+- runFlow:
+    when:
+      notVisible: "Top read"
+    commands:
+      - scroll
+      - scroll
+
+- takeScreenshot: iOS_Wiki_TopReadReached
