@@ -1,0 +1,40 @@
+# wiki-aiExtract.yaml
+# Demonstrates Maestro AI commands on the Wikipedia iOS app:
+#   - assertNoDefectsWithAI: visual/functional audit for UI bugs and broken layouts
+#   - extractTextWithAI: extracts dynamic content using natural language
+#   - assertWithAI: validates complex UI states with natural language
+
+appId: org.wikimedia.wikipedia
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+# Navigate to a search result for richer content
+- tapOn:
+    text: "Search Wikipedia"
+    index: 0
+- inputText: "Albert Einstein"
+- tapOn:
+    text: "Albert Einstein"
+    below: "Search Wikipedia"
+- assertVisible: "Albert Einstein"
+
+# extractTextWithAI: extract the article description / date of birth
+- extractTextWithAI:
+    query: "Extract date of birth from the short description of the Albert Einstein article"
+    optional: false # If AI fails to extract / can't process, the test fails.
+
+# Log what the AI extracted — evalScript outputs to Maestro session logs
+- evalScript: '${console.log("AI found: " + aiOutput)}'
+
+# Surface the extracted value in the test
+- tapOn:
+    text: "Search Wikipedia"
+    index: 0
+- inputText: "${aiOutput}"
+# Verify the search field contains the extracted text (non-null assertion)
+- assertVisible: "${aiOutput}"
+- hideKeyboard
+
+- takeScreenshot: iOS_Wiki_EinsteinArticle

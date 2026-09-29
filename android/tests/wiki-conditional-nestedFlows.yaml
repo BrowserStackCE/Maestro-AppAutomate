@@ -1,0 +1,23 @@
+#wiki-conditionalFlows.yaml
+# Scrolls to the Top read section conditionally — runs scrollFlow.yaml
+# if the section is not yet visible after landing on the home screen.
+
+appId: org.wikipedia.alpha
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+# Dismiss the feed announcement card if present
+- runFlow:
+    when:
+      visible: "GOT IT"
+    commands:
+      - tapOn: "GOT IT"
+
+# Conditionally scroll down if Top read section is not yet visible
+- runFlow:
+    when:
+      notVisible: "Top read"
+    file: common/functions/scroll.yaml
+- takeScreenshot: WikiConditional_TopReadReached

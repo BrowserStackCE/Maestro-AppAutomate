@@ -1,0 +1,27 @@
+# wiki-swipe.yaml
+# Swipes through the onboarding pager (3 swipes) and asserts
+# that the CONTINUE button changes to GET STARTED on the last page.
+
+appId: org.wikipedia.alpha
+---
+- launchApp:
+    clearState: true
+
+# Dismiss notification permission dialog if it appears
+- runFlow:
+    when:
+      visible: "Allow"
+    commands:
+      - tapOn: "Allow"
+      - waitForAnimationToEnd:
+          timeout: 2000
+
+# Assert we are on the onboarding screen (page 1)
+- assertVisible: "CONTINUE"
+
+# Swipe left 3 times to reach the last onboarding page (via reusable subflow)
+- runFlow: common/functions/swipe.yaml
+
+# Assert CONTINUE has changed to GET STARTED on the last page
+- assertVisible: "GET STARTED"
+- takeScreenshot: OnboardingLastPage

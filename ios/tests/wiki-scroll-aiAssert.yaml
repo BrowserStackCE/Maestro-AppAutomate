@@ -1,0 +1,22 @@
+# wiki-scroll-aiAssert.yaml
+# Scrolls down the Wikipedia Explore feed and uses assertNoDefectsWithAI
+# to audit the screen for UI defects.
+
+appId: org.wikimedia.wikipedia
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+# Scroll down to load more feed content
+- repeat:
+    times: 2
+    commands:
+      - scroll
+
+# assertNoDefectsWithAI: audit the feed for UI defects such as
+# cut-off text, overlapping elements, or misaligned cards.
+- assertNoDefectsWithAI:
+    optional: false
+
+- takeScreenshot: iOS_Wiki_ScrollAudit

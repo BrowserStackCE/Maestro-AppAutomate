@@ -1,0 +1,21 @@
+# Test Companion onboarding (local, per-machine)
+.test-companion/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Temporary build artifacts
+*.zip
+*.tar.gz
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,21 @@
+# wiki-generalFlow.yaml
+
+appId: org.wikipedia.alpha
+---
+- launchApp:
+    clearState: true
+- runFlow: subflows/skipOnboarding.yaml
+
+- tapOn:
+    text: "Search Wikipedia"
+    index: 0
+- inputText: "Albert Einstein"
+- tapOn: 
+    text: "Albert Einstein"
+    below: "Search Wikipedia"
+- assertVisible: "Albert Einstein"
+
+# assertWithAI: validate the article page looks correct
+- assertWithAI:
+    assertion: "The page contains a prominent article title, at least one image, and a block of introductory text."
+    optional: false # Set to false so the test actually fails if the page didn't load properly
