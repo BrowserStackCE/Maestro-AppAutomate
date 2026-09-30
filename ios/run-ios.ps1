@@ -45,9 +45,7 @@ if ($Upload) {
 
     Write-Host "==> Zipping tests/ flows..."
     if (Test-Path ios_flows.zip) { Remove-Item ios_flows.zip }
-    Push-Location tests
-    try { Compress-Archive -Path * -DestinationPath ..\ios_flows.zip }
-    finally { Pop-Location }
+    Compress-Archive -Path tests -DestinationPath ios_flows.zip
 
     Write-Host "==> Uploading test suite (custom_id: iOSFlows)..."
     $suiteResponse = curl.exe -s -u "${BS_USER}:${BS_KEY}" `
