@@ -53,7 +53,7 @@ if "%1"=="--upload" (
 
     echo =^> Zipping tests/ flows...
     if exist ios_flows.zip del ios_flows.zip
-    cd tests && tar -a -c -f ..\ios_flows.zip * && cd ..
+    tar -a -c -f ios_flows.zip tests
 
     echo =^> Uploading test suite ^(custom_id: iOSFlows^)...
     for /f "delims=" %%u in ('curl.exe -s -u "%BS_USER%:%BS_KEY%" -X POST "https://api-cloud.browserstack.com/app-automate/maestro/v2/test-suite" -F "file=@ios_flows.zip" -F "custom_id=iOSFlows" ^| python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get(\"test_suite_url\",\"\"))"') do set SUITE_URL=%%u

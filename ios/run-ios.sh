@@ -150,7 +150,7 @@ if [[ "${1:-}" == "--upload" ]]; then
     -F "custom_id=${APP}" | python3 -c "import sys,json; d=json.load(sys.stdin); print('  app_url:', d.get('app_url','(see response)'))"
 
   echo "==> Zipping tests/ flows..."
-  (cd tests && zip -r ../ios_flows.zip .) >/dev/null
+  zip -r ios_flows.zip tests >/dev/null
 
   echo "==> Uploading test suite (custom_id: iOSFlows)..."
   SUITE_URL=$(curl -s -u "$BS_USER:$BS_KEY" \
