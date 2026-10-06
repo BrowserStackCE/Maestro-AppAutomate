@@ -4,7 +4,7 @@
 #   - extractTextWithAI: extracts dynamic content using natural language
 #   - assertWithAI: validates complex UI states with natural language
 
-appId: org.wikimedia.wikipedia
+appId: com.demo.wikipedia
 ---
 - launchApp:
     clearState: true
@@ -15,9 +15,19 @@ appId: org.wikimedia.wikipedia
     text: "Search Wikipedia"
     index: 0
 - inputText: "Albert Einstein"
-- tapOn:
-    text: "Albert Einstein"
-    below: "Search Wikipedia"
+
+# Wait for the network result to load, then tap the unformatted subtitle
+- extendedWaitUntil:
+    visible: "German-born theoretical physicist.*"
+    timeout: 5000
+
+- tapOn: "German-born theoretical physicist.*"
+
+# Dismiss up to 3 first-time-use "Got it" popovers (Tap to go back, Open in new tab, Tabs overview)
+- runFlow: subflows/dismissGotIt.yaml
+- runFlow: subflows/dismissGotIt.yaml
+- runFlow: subflows/dismissGotIt.yaml
+
 - assertVisible: "Albert Einstein"
 
 # extractTextWithAI: extract the article description / date of birth
@@ -35,6 +45,5 @@ appId: org.wikimedia.wikipedia
 - inputText: "${aiOutput}"
 # Verify the search field contains the extracted text (non-null assertion)
 - assertVisible: "${aiOutput}"
-- hideKeyboard
 
 - takeScreenshot: iOS_Wiki_EinsteinArticle

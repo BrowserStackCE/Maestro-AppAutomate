@@ -45,21 +45,21 @@ maestroVersion: 1.39.13
 
 # ── Observability & debugging ──────────────────────────────────────────────────
 # testObservability MUST be true Only when accessibility is enabled/ else keep false
-testObservability: true
+testObservability: false
 networkLogs: true
 deviceLogs: true
 appProfiling: true
 
 # Retry failed tests once before marking them as failed.
-retryTestsOnFailure: true
+retryTestsOnFailure: false
 
 # ── Accessibility scanning ─────────────────────────────────────────────────────
 accessibility: true
 accessibilityOptions:
-  wcagVersion: wcag22aa
+  wcagVersion: wcag22aaa
   includeIssueType:
     bestPractice: true
-    needsReview: false
+    needsReview: true
   screenReaderAutomationReport: true
 
 # ── Sharding ───────────────────────────────────────────────────────────────────

@@ -1,28 +1,24 @@
 # wiki-swipe.yaml
-# Swipes through the Wikipedia onboarding pager (if shown) and then
-# uses assertNoDefectsWithAI to audit the Explore home screen.
+# Swipes through the onboarding pager (3 swipes) and asserts
+# that the CONTINUE button changes to GET STARTED on the last page.
 
-appId: org.wikimedia.wikipedia
+appId: com.demo.wikipedia
 ---
 - launchApp:
     clearState: true
-- runFlow: subflows/skipOnboarding.yaml
 
-# Swipe left across the Explore feed to reveal more content.
-# X: 350→50 (safe for all iPhone 15+ widths), Y: 400px (mid-screen).
-- repeat:
-    times: 3
+# Dismiss notification permission dialog if it appears
+- runFlow:
+    when:
+      visible: "Allow"
     commands:
-      - swipe:
-          start: 350, 400
-          end: 50, 400
-          duration: 800
+      - tapOn: "Allow"
       - waitForAnimationToEnd:
-          timeout: 500
+          timeout: 2000
 
-# assertNoDefectsWithAI: audit the screen after swiping for UI defects
-# such as truncated text, broken layouts, or misaligned elements.
-- assertNoDefectsWithAI:
-    optional: false
+# Swipe left across the Explore feed to reveal more content (via reusable subflow).
+- runFlow: common/functions/swipe.yaml
 
-- takeScreenshot: iOS_Wiki_SwipeAudit
+# Assert Get started button is visible on the last onboarding page
+- assertVisible: "Get started"
+- takeScreenshot: OnboardingLastPage

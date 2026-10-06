@@ -1,6 +1,6 @@
 # iOS — Maestro on BrowserStack App Automate
 
-Run Maestro UI flows for the **SastaMart iOS app** on real iOS devices using BrowserStack App Automate.
+Run Maestro UI flows for the **Wikipedia iOS app** on real iOS devices using BrowserStack App Automate.
 
 ---
 
@@ -10,13 +10,17 @@ Run Maestro UI flows for the **SastaMart iOS app** on real iOS devices using Bro
 maestro-ui-automation/
 ├── ios/                              # iOS platform directory
 │   ├── tests/                        # Maestro flows (uploaded as test suite)
-│   │   ├── sastamart-generalFlow-aiVerify.yaml   # Home screen AI verification
-│   │   ├── sastamart-scroll-aiAssert.yaml        # Scroll product listing + AI defect audit
-│   │   ├── sastamart-swipe-aiAssert.yaml         # Swipe filter row to Keyboards + AI audit
-│   │   ├── sastamart-addToCart-aiVerify.yaml     # Add to cart flow + AI verification
-│   │   ├── sastamart-aiExtract.yaml              # AI text extraction flow
+│   │   ├── wiki-generalFlow-aiVerify.yaml    # Explore home screen AI verification
+│   │   ├── wiki-scroll-aiAssert.yaml         # Scroll feed + AI defect audit
+│   │   ├── wiki-swipe.yaml                   # Onboarding swipe + Get started assertion
+│   │   ├── wiki-aiExtract.yaml               # AI text extraction (Einstein article)
+│   │   ├── wiki-conditional-nestedFlows.yaml # Conditional scroll to On this day
+│   │   ├── common/functions/
+│   │   │   ├── scroll.yaml                   # Reusable scroll sub-flow
+│   │   │   └── swipe.yaml                    # Reusable swipe sub-flow
 │   │   └── subflows/
-│   │       └── skipOnboarding.yaml               # Reusable sub-flow: skip onboarding as guest
+│   │       ├── skipOnboarding.yaml           # Skip onboarding / dismiss permission dialogs
+│   │       └── dismissGotIt.yaml             # Dismiss first-time-use "Got it" popovers
 │   ├── browserstack.yml              # All capabilities, devices, shards & run profile
 │   ├── run-ios.sh                    # macOS / Linux runner
 │   ├── run-ios.ps1                   # Windows PowerShell runner
@@ -24,7 +28,7 @@ maestro-ui-automation/
 │   └── README.md                     # ← You are here
 ├── android/                          # Android platform directory (see android/README.md)
 ├── app/
-│   ├── SastaMart.ipa                 # iOS test app
+│   ├── Wikipedia.ipa                 # iOS test app
 │   └── WikipediaSample.apk           # Android test app
 ├── build_payload.py                  # Builds the BrowserStack API JSON payload from browserstack.yml
 └── read_devices.py                   # Reads device list from browserstack.yml
@@ -82,12 +86,20 @@ devices:
 maestroVersion: latest
 
 # Observability & debugging
-# NOTE: keep networkLogs and accessibility disabled for this build
 testObservability: false
 networkLogs: false
 deviceLogs: true
 appProfiling: true
 retryTestsOnFailure: true
+
+# Accessibility scanning
+accessibility: true
+accessibilityOptions:
+  wcagVersion: wcag22aaa
+  includeIssueType:
+    bestPractice: true
+    needsReview: true
+  screenReaderAutomationReport: false
 
 # Sharding — 1 flow per shard, run in parallel
 # PARALLEL SESSION CALCULATION:
@@ -99,19 +111,19 @@ shards:
   mapping:
     - name: "Shard 1 - scroll AI assert"
       values:
-        execute: [sastamart-scroll-aiAssert.yaml]
-    - name: "Shard 2 - swipe AI assert"
+        execute: [wiki-scroll-aiAssert.yaml]
+    - name: "Shard 2 - swipe"
       values:
-        execute: [sastamart-swipe-aiAssert.yaml]
+        execute: [wiki-swipe.yaml]
     - name: "Shard 3 - AI extract"
       values:
-        execute: [sastamart-aiExtract.yaml]
-    - name: "Shard 4 - add to cart AI verify"
+        execute: [wiki-aiExtract.yaml]
+    - name: "Shard 4 - conditional nested flows"
       values:
-        execute: [sastamart-addToCart-aiVerify.yaml]
+        execute: [wiki-conditional-nestedFlows.yaml]
     - name: "Shard 5 - general flow AI verify"
       values:
-        execute: [sastamart-generalFlow-aiVerify.yaml]
+        execute: [wiki-generalFlow-aiVerify.yaml]
 ```
 
 ---
@@ -141,7 +153,7 @@ run-ios.bat --upload
 ```
 
 The `--upload` flag:
-1. Uploads `../app/SastaMart.ipa` with `custom_id=SastaMartIOS`
+1. Uploads `../app/Wikipedia.ipa` with `custom_id=WikipediaIOS`
 2. Zips `tests/` and uploads the test suite with `custom_id=iOSFlows`
 3. Triggers the build using all settings from `browserstack.yml`
 4. Cleans up the local `ios_flows.zip`
@@ -172,13 +184,13 @@ run-ios.bat
 
 | Capability | Note |
 |---|---|
-| `maestroVersion: latest` | **Required** for AI commands (`assertNoDefectsWithAI`, `assertWithAI`, `extractTextWithAI`). Resolves to Maestro 2.6.1+. Omitting or pinning an older version causes `TESTSUITE_PARSE_ERROR`. |
-| `networkLogs` / `testObservability` | Keep `false` for standard builds — enabling them can cause parse issues with certain Maestro versions. |
+| `maestroVersion: latest` | **Required** for AI commands (`assertNoDefectsWithAI`, `assertWithAI`, `extractTextWithAI`). Resolves to Maestro 2.6.1+. Older versions (v1.39.10) trigger an XCUITest HTTP 500 driver deadlock during vertical scroll on real iOS devices. |
+| `accessibility` | Enabled with `wcag22aaa` level. Keep `testObservability: false` — enabling test observability can interfere with report generation. |
 | `retryTestsOnFailure` | Works with both sharded and non-sharded builds. |
 | `deviceSelection: any` | BrowserStack picks one available device per shard. Total sessions = number of shards (5). |
 | `deviceSelection: all` | Each shard runs on **every** listed device. Total sessions = shards × devices (5 × 4 = 20). |
 | `custom_id` | Re-uploading with the same `custom_id` updates the alias — no need to update `bs://` URLs. |
-| Filter row swipe | Swipe coordinates `start: 350, 205` → `end: 50, 205` target the category filter row centre (y=205px, verified via Appium). |
+| Zip structure | The run scripts zip from the `ios/` level (`zip -r ios_flows.zip tests`) so BrowserStack discovers all flows under the `tests/` prefix. Zipping from inside `tests/` causes only the subflow to run as a standalone test. |
 
 ---
 

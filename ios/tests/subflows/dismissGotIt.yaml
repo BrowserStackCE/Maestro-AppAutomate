@@ -1,0 +1,14 @@
+# dismissGotIt.yaml
+# Reusable sub-flow: dismisses a single "Got it" popover if visible.
+# Reference this subflow multiple times wherever Got it popovers may appear.
+
+appId: com.demo.wikipedia
+--- # To be used within other flows via runFlow, not run standalone.
+
+- runFlow:
+    when:
+      visible: "Got it"
+    commands:
+      - tapOn: "Got it"
+      - waitForAnimationToEnd:
+          timeout: 500

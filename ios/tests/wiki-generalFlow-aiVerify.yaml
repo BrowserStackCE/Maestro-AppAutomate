@@ -2,7 +2,7 @@
 # Navigates to the Wikipedia Explore home screen and uses assertWithAI to verify
 # the feed looks correct.
 
-appId: org.wikimedia.wikipedia
+appId: com.demo.wikipedia
 ---
 - launchApp:
     clearState: true
