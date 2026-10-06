@@ -10,30 +10,34 @@ Run declarative Maestro UI flows for **Android** (Wikipedia) and **iOS** (Wikipe
 maestro-ui-automation/
 ├── android/                          # Android platform
 │   ├── tests/                        # Maestro flows
-│   │   ├── wiki-generalFlow-aiVerify.yaml   # Home screen AI verification
-│   │   ├── wiki-scroll-aiAssert.yaml        # Scroll feed + AI defect audit
-│   │   ├── wiki-swipe.yaml                  # Swipe + AI defect audit
-│   │   ├── wiki-aiExtract.yaml              # AI text extraction (Einstein article)
+│   │   ├── wiki-generalFlow-aiVerify.yaml    # Explore home screen AI verification
+│   │   ├── wiki-scroll-aiAssert.yaml         # Scroll feed + AI defect audit
+│   │   ├── wiki-swipe.yaml                   # Onboarding swipe + GET STARTED assertion
+│   │   ├── wiki-aiExtract.yaml               # AI text extraction (Einstein article)
 │   │   ├── wiki-conditional-nestedFlows.yaml # Conditional scroll to Top read
 │   │   ├── common/functions/
-│   │   │   ├── scroll.yaml                  # Reusable scroll sub-flow
-│   │   │   └── swipe.yaml                   # Reusable swipe sub-flow
+│   │   │   ├── scroll.yaml                   # Reusable scroll sub-flow
+│   │   │   └── swipe.yaml                    # Reusable swipe sub-flow
 │   │   └── subflows/
-│   │       └── skipOnboarding.yaml          # Skip onboarding / dismiss dialogs
+│   │       └── skipOnboarding.yaml           # Skip onboarding / dismiss dialogs
 │   ├── browserstack.yml              # Capabilities, devices, shards & run profile
 │   ├── run-android.sh                # macOS / Linux runner
 │   ├── run-android.ps1               # Windows PowerShell runner
 │   ├── run-android.bat               # Windows CMD runner
 │   └── README.md
 ├── ios/                              # iOS platform
-│   ├── tests/                        # Maestro flows (identical flows to Android)
-│   │   ├── wiki-generalFlow-aiVerify.yaml
-│   │   ├── wiki-scroll-aiAssert.yaml
-│   │   ├── wiki-swipe.yaml
-│   │   ├── wiki-aiExtract.yaml
-│   │   ├── wiki-conditional-nestedFlows.yaml
+│   ├── tests/                        # Maestro flows
+│   │   ├── wiki-generalFlow-aiVerify.yaml    # Explore home screen AI verification
+│   │   ├── wiki-scroll-aiAssert.yaml         # Scroll feed + AI defect audit
+│   │   ├── wiki-swipe.yaml                   # Onboarding swipe + Get started assertion
+│   │   ├── wiki-aiExtract.yaml               # AI text extraction (Einstein article)
+│   │   ├── wiki-conditional-nestedFlows.yaml # Conditional scroll to On this day
+│   │   ├── common/functions/
+│   │   │   ├── scroll.yaml                   # Reusable scroll sub-flow
+│   │   │   └── swipe.yaml                    # Reusable swipe sub-flow
 │   │   └── subflows/
-│   │       └── skipOnboarding.yaml
+│   │       ├── skipOnboarding.yaml           # Skip onboarding / dismiss permission dialogs
+│   │       └── dismissGotIt.yaml             # Dismiss first-time-use "Got it" popovers
 │   ├── browserstack.yml
 │   ├── run-ios.sh
 │   ├── run-ios.ps1
@@ -102,10 +106,38 @@ cd ios
 | `assertNoDefectsWithAI` | Visual/functional audit for UI bugs and broken layouts |
 | `extractTextWithAI` | Extract dynamic content (e.g. article text, prices) |
 
-> **Requires** `maestroVersion: latest` in `browserstack.yml`. Omitting or pinning an older version causes `TESTSUITE_PARSE_ERROR`.
+> **Requires** `maestroVersion: latest` (iOS) or `maestroVersion: 1.39.13` (Android) in `browserstack.yml`.
+
+---
+
+## Observability & capabilities
+
+| Capability | Android | iOS | Notes |
+|---|---|---|---|
+| `maestroVersion` | `1.39.13` | `latest` | Android pins to the version that supports accessibility scanning; iOS uses latest for AI commands |
+| `testObservability` | `false` | `false` | Must be `false` on Android when accessibility is disabled; keep `false` on iOS to avoid accessibility report interference |
+| `deviceLogs` | `true` | `true` | Device system logs captured for both platforms |
+| `appProfiling` | `true` | `true` | CPU / memory metrics recorded for performance analysis |
+| `networkLogs` | `true` | `false` | HTTP traffic captured on Android; disabled on iOS |
+| `retryTestsOnFailure` | `true` | `true` | Failed tests retried once before marking as failed |
+
+---
+
+## Accessibility scanning
+
+Both platforms run BrowserStack App Accessibility with WCAG 2.2 AAA coverage.
+
+| Option | Android | iOS |
+|---|---|---|
+| `wcagVersion` | `wcag22aaa` | `wcag22aaa` |
+| `bestPractice` | `true` | `true` |
+| `needsReview` | `true` | `true` |
+| `screenReaderAutomationReport` | `true` | `false` |
+
+> **Screen reader automation report** is enabled on Android to generate a TalkBack-driven accessibility report. It is disabled on iOS as VoiceOver automation report generation require enhancements.
 
 ---
 
 ## View results
 
-Visit [app-automate.browserstack.com](https://app-automate.browserstack.com) to see build results, session videos, device logs, and network logs.
+Visit [app-automate.browserstack.com](https://app-automate.browserstack.com) to see build results, session videos, device logs, network logs, app performance profiles, and accessibility reports.
