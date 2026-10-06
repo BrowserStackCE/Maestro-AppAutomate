@@ -3,7 +3,7 @@
 # and skips the onboarding pager to land on the Explore home screen.
 # Use after launchApp with clearState: true.
 
-appId: org.wikimedia.wikipedia
+appId: com.demo.wikipedia
 --- # To be used within other flows, not separately.
 
 # Wait for the app to fully settle after launch before checking for dialogs

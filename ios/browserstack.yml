@@ -18,7 +18,7 @@ app: WikipediaIOS
 
 # ── Test suite ─────────────────────────────────────────────────────────────────
 # custom_id assigned at upload time (via run-ios.sh --upload)
-testSuite: iOSWikiFlows
+testSuite: iOSFlows
 
 # ── Project / build metadata ───────────────────────────────────────────────────
 project: Maestro
@@ -32,13 +32,9 @@ devices:
   - iPhone 18 Pro Max-27
 
 # ── Maestro runtime ────────────────────────────────────────────────────────────
-# REQUIRED for AI commands (assertNoDefectsWithAI, assertWithAI, extractTextWithAI).
-# NOTE: accessibility scanning is NOT supported with maestroVersion: latest —
-# disable accessibility (keep it unset/false) when using this value.
 maestroVersion: latest
 
-# ── Observability & debugging Keep networkLogs/accessibility disable for the build ──────
-# testObservability MUST be true Only when accessibility is enabled/ else keep false
+# ── testObservability: false when Accessibility enabled & networkLogs disable for the build ──────
 testObservability: false
 networkLogs: false
 deviceLogs: true
@@ -46,6 +42,16 @@ appProfiling: true
 
 # Retry failed tests once before marking them as failed.
 retryTestsOnFailure: true
+
+# ── Accessibility scanning ─────────────────────────────────────────────────────
+accessibility: true
+accessibilityOptions:
+  wcagVersion: wcag22aaa
+  includeIssueType:
+    bestPractice: true
+    needsReview: true
+  screenReaderAutomationReport: false
+
 
 # ── Sharding ───────────────────────────────────────────────────────────────────
 shards:

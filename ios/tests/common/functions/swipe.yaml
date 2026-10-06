@@ -1,0 +1,15 @@
+# swipe.yaml
+# Reusable sub-flow: 3× horizontal left-swipe through the Explore feed.
+# Coordinates: X 350→50 (safe for all iPhone 15+ widths), Y 400px (mid-screen).
+
+appId: com.demo.wikipedia
+--- # To be used within other flows via runFlow, not run standalone.
+- repeat:
+    times: 3
+    commands:
+      - swipe:
+          start: 350, 400
+          end: 50, 400
+          duration: 800
+      - waitForAnimationToEnd:
+          timeout: 1000

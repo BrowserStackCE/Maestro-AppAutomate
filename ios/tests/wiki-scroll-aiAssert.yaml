@@ -1,22 +1,19 @@
 # wiki-scroll-aiAssert.yaml
 # Scrolls down the Wikipedia Explore feed and uses assertNoDefectsWithAI
 # to audit the screen for UI defects.
+# NOTE: Upgrade BrowserStack to Maestro v2.6.1+ using the maestroVersion: latest.
+# Older versions (v1.39.10) trigger an XCUITest HTTP 500 driver deadlock during vertical scroll actions on real iOS devices.
 
-appId: org.wikimedia.wikipedia
+appId: com.demo.wikipedia
 ---
 - launchApp:
     clearState: true
 - runFlow: subflows/skipOnboarding.yaml
 
-# Scroll down to load more feed content
-- repeat:
-    times: 2
-    commands:
-      - scroll
+- runFlow: common/functions/scroll.yaml
 
-# assertNoDefectsWithAI: audit the feed for UI defects such as
-# cut-off text, overlapping elements, or misaligned cards.
+# assertNoDefectsWithAI: audit the Explore home screen for UI defects like text or UI elements cut off, overlapping, or misalignment.
 - assertNoDefectsWithAI:
     optional: false
 
-- takeScreenshot: iOS_Wiki_ScrollAudit
+- takeScreenshot: WikiScroll_TopReadVisible
