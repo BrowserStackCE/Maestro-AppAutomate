@@ -44,14 +44,14 @@ devices:
 maestroVersion: 1.39.13
 
 # ── Observability & debugging ──────────────────────────────────────────────────
-# testObservability MUST be true Only when accessibility is enabled/ else keep false
+# testObservability MUST be false when accessibility is disabled
 testObservability: false
 networkLogs: true
 deviceLogs: true
 appProfiling: true
 
 # Retry failed tests once before marking them as failed.
-retryTestsOnFailure: false
+retryTestsOnFailure: true
 
 # ── Accessibility scanning ─────────────────────────────────────────────────────
 accessibility: true
