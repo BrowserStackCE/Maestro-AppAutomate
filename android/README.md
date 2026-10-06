@@ -80,12 +80,12 @@ devices:
   - Samsung Galaxy S25-15.0
   - Samsung Galaxy S26-16.0
 
-# Maestro version — pin to a stable version when accessibility is enabled
+# Maestro version — pin to a default version when accessibility is enabled
 # NOTE: accessibility is not supported with maestroVersion: latest
-# maestroVersion: 1.38.0
+# 1.39.13 is the supported version for accessibility scanning.
 
 # Observability & debugging
-testObservability: true   # Required when accessibility: true
+testObservability: false
 networkLogs: true
 deviceLogs: true
 appProfiling: true
@@ -175,11 +175,11 @@ run-android.bat
 
 | Capability | Note |
 |---|---|
-| `maestroVersion: latest` | Accessibility scanning is **not supported** with `latest`. Pin to a specific version (e.g. `1.38.0`) when `accessibility: true`. |
+| `maestroVersion: latest` | Accessibility scanning is **not supported** with `latest`. Pin to Default version (e.g. `1.39.13`) when `accessibility: true`. |
 | `retryTestsOnFailure` | Works with both sharded and non-sharded builds. |
 | `deviceSelection: all` | Each shard runs on **every** listed device. Total sessions = shards × devices. Ensure your parallel limit covers this. |
 | `deviceSelection: any` | BrowserStack picks one available device per shard. Total sessions = number of shards. |
-| `testObservability` | Must be `true` when `accessibility: true`. |
+| `testObservability` | Must be `false` when `accessibility: false`. |
 | `custom_id` | Re-uploading with the same `custom_id` updates the alias — no need to update `bs://` URLs. |
 
 ---

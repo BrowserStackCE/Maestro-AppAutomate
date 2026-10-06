@@ -54,6 +54,16 @@ accessibilityOptions:
 
 
 # ── Sharding ───────────────────────────────────────────────────────────────────
+# PARALLEL SESSION CALCULATION:
+#   deviceSelection: all  → each shard runs on EVERY listed device
+#                           total sessions = numberOfShards × number of devices
+#                           e.g. 5 shards × 4 devices = 20 parallel sessions
+#   deviceSelection: any  → BrowserStack picks ONE available device per shard
+#                           total sessions = numberOfShards (1 per shard)
+#
+# Ensure your account's parallel limit >= total sessions or builds will be
+# queued / rejected with BROWSERSTACK_ALL_PARALLELS_IN_USE.
+
 shards:
   numberOfShards: 5
   deviceSelection: any
