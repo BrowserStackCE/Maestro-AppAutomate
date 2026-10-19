@@ -87,7 +87,7 @@ maestroVersion: latest
 
 # Observability & debugging
 testObservability: false
-networkLogs: false
+networkLogs: true
 deviceLogs: true
 appProfiling: true
 retryTestsOnFailure: true
