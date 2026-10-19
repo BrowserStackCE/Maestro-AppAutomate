@@ -118,7 +118,6 @@ cd ios
 | `testObservability` | `false` | `false` | Must be `false` on Android when accessibility is disabled; keep `false` on iOS to avoid accessibility report interference |
 | `deviceLogs` | `true` | `true` | Device system logs captured for both platforms |
 | `appProfiling` | `true` | `true` | CPU / memory metrics recorded for performance analysis |
-| `networkLogs` | `true` | `false` | HTTP traffic captured on Android; disabled on iOS |
 | `retryTestsOnFailure` | `true` | `true` | Failed tests retried once before marking as failed |
 
 ---

@@ -34,9 +34,9 @@ devices:
 # ── Maestro runtime ────────────────────────────────────────────────────────────
 maestroVersion: latest
 
-# ── testObservability: false when Accessibility enabled & networkLogs disable for the build ──────
+# ── testObservability: false when Accessibility enabled ──────
 testObservability: false
-networkLogs: false
+networkLogs: true
 deviceLogs: true
 appProfiling: true
 
