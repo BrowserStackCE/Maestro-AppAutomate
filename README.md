@@ -131,9 +131,9 @@ Both platforms run BrowserStack App Accessibility with WCAG 2.2 AAA coverage.
 | `wcagVersion` | `wcag22aaa` | `wcag22aaa` |
 | `bestPractice` | `true` | `true` |
 | `needsReview` | `true` | `true` |
-| `screenReaderAutomationReport` | `true` | `false` |
+| `screenReaderAutomationReport` | `true` | `true` |
 
-> **Screen reader automation report** is enabled on Android to generate a TalkBack-driven accessibility report. It is disabled on iOS as VoiceOver automation report generation require enhancements.
+> **Screen reader automation report** is enabled on both platforms to generate a TalkBack (Android) / VoiceOver (iOS) driven accessibility report.
 
 ---
 

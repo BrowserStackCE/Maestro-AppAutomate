@@ -99,7 +99,7 @@ accessibilityOptions:
   includeIssueType:
     bestPractice: true
     needsReview: true
-  screenReaderAutomationReport: false
+  screenReaderAutomationReport: true
 
 # Sharding — 1 flow per shard, run in parallel
 # PARALLEL SESSION CALCULATION:
