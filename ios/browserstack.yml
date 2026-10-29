@@ -50,7 +50,7 @@ accessibilityOptions:
   includeIssueType:
     bestPractice: true
     needsReview: true
-  screenReaderAutomationReport: false
+  screenReaderAutomationReport: true
 
 
 # ── Sharding ───────────────────────────────────────────────────────────────────
